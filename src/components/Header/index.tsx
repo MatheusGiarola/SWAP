@@ -16,35 +16,38 @@ export function Header() {
 
   return (
     <Flex
-      as="header"
-      w="100%"
-      maxWidth={1480}
-      h="20"
-      mx="auto"
-      mt="4"
-      px="6"
-      align="center"
+      boxShadow="0px 0px 7px -2px rgba(0,0,0,0.1)"
     >
-      {!isWideVersion && (
-        <IconButton
-          aria-label="Open navigation"
-          icon={<Icon as={RiMenuLine} />}
-          variant="unstyled"
-          onClick={onOpen}
-          fontSize="24"
-          mr="2"
-        />
-      )}
+      <Flex
+        as="header"
+        w="100%"
+        maxWidth={1480}
+        h="20"
+        mx="auto"
+        px="6"
+        align="center"
+      >
+        {!isWideVersion && (
+          <IconButton
+            aria-label="Open navigation"
+            icon={<Icon as={RiMenuLine} />}
+            variant="unstyled"
+            onClick={onOpen}
+            fontSize="24"
+            mr="2"
+          />
+        )}
 
-      <Logo w="64"/>
+        <Logo w="64" color="teal.500" />
 
-      {isWideVersion && (
-        <SearchBox />
-      )}
+        {isWideVersion && (
+          <SearchBox />
+        )}
 
-      <Flex align="center" ml="auto">
-        <OptionsNav />
-        <Profile showProfileData={isWideVersion} />
+        <Flex align="center" ml="auto">
+          <OptionsNav />
+          <Profile showProfileData={isWideVersion} />
+        </Flex>
       </Flex>
     </Flex>
   )

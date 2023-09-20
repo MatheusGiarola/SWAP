@@ -1,0 +1,58 @@
+[
+    {
+        "id": "097c429c-6585-4d7f-8c65-ed71d63af395",
+        "title": "Geração de Imagens com IA 2",
+        "description": "Mussum In interdum ullamcorper vehicula. Nullam in volutpat odio. Curabitur tincidunt lorem malesuada, lacinia urna sit amet, sodales ex. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis rutrum ipsum risus, in sollicitudin lorem finibus vel. Nulla pharetra feugiat efficitur. Integer volutpat lacinia nibh id ullamcorper. Suspendisse ultrices leo nulla, id consequat nunc blandit sit amet. Aliquam dignissim consectetur nisl ut iaculis. Nunc semper, felis quis tincidunt auctor, purus ipsum blandit felis, et scelerisque quam leo vel felis.",
+        "contributors": [
+            {
+                "id": "20548658-8824-46fb-8026-0576b92cd167",
+                "email": "admin5@admin.com",
+                "name": "Admin",
+                "typeId": 1,
+                "updatedAt": "2023-08-22T10:42:14.028Z",
+                "createdAt": "2023-08-22T10:45:55.000Z"
+            }
+        ],
+        "keywords": [
+            "IA",
+            "Imagens"
+        ],
+        "type": {
+            "id": "d7b328cb-b517-4883-bd5e-068421cc6309",
+            "name": "Artigo Acadêmico",
+            "acronym": "AC"
+        },
+        "startDate": "2021-05-16T00:00:00.000Z",
+        "endDate": "2023-02-24T00:00:00.000Z",
+        "updatedAt": "2023-08-27T17:34:04.693Z",
+        "createdAt": "2023-08-22T10:51:35.912Z"
+    },
+    {
+        "id": "eda55aa8-8a00-4ddd-83fb-a865a56f21fb",
+        "title": "Carros Voadores",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla faucibus orci in urna suscipit, eu consequat nibh convallis. Vestibulum et scelerisque orci. Vestibulum non fermentum nisi. Nulla dui neque, feugiat sed felis eget, venenatis dapibus sapien. Fusce porta ut velit fringilla viverra. Duis facilisis, ipsum eu dignissim euismod, mi nisi porttitor risus, nec vehicula libero massa vel mi. Curabitur interdum libero dolor, a vulputate erat commodo a. Proin sed volutpat felis. Vivamus id euismod sapien, eu pellentesque ipsum. Aenean vitae pretium augue, a convallis libero. Cras lobortis leo id lorem convallis dignissim. Mauris tincidunt sollicitudin quam, nec aliquam ligula aliquam non. Ut sed dapibus lectus. Quisque sed elit mattis, aliquet lorem non, commodo ligula.",
+        "contributors": [
+            {
+                "id": "405dc92e-3a1c-42c8-bab7-da0b615ad8c1",
+                "email": "teste@aluno.ufsj.edu.br",
+                "name": "Giovanni Filho",
+                "typeId": 2,
+                "updatedAt": "2023-09-06T10:51:59.597Z",
+                "createdAt": "2023-09-06T10:51:59.597Z"
+            }
+        ],
+        "keywords": [
+            "Carros",
+            "Asas"
+        ],
+        "type": {
+            "id": "d7b328cb-b517-4883-bd5e-068421cc6309",
+            "name": "Artigo Acadêmico",
+            "acronym": "AC"
+        },
+        "startDate": "2022-06-23T00:00:00.000Z",
+        "endDate": null,
+        "updatedAt": "2023-09-08T16:24:30.806Z",
+        "createdAt": "2023-09-08T16:26:55.712Z"
+    }
+]

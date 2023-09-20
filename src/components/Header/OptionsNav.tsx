@@ -9,26 +9,26 @@ export function OptionsNav() {
       mx={["6", "8"]}
       pr={["6", "8"]}
       py="1"
-      color="gray.300"
       borderRightWidth={1}
-      borderColor="gray.700"
+      borderColor="teal.700"
     >
-      <IconButton
-        aria-label='Adicionar novo projeto'
-        icon={<RiNotificationLine fontSize="25px" />}
-        colorScheme="gray"
-        bg="transparent"
-        _hover={{ bg: "transparent", color: 'white' }}
-      />
-
+      <Link href="/newProject">
+        <IconButton
+          aria-label='Adicionar novo projeto'
+          icon={<RiNotificationLine fontSize="25px" />}
+          color="teal.500"
+          bg="transparent"
+          _hover={{ color: 'teal.800' }}
+        />
+      </Link>
       <Link href="/newProject">
         <IconButton
           aria-label='Adicionar novo projeto'
           icon={<RiAddCircleFill fontSize="25px" />}
           size="sm"
-          colorScheme="gray"
+          color="teal.500"
           bg="transparent"
-          _hover={{ bg: "transparent", color: 'white' }}
+          _hover={{ color: 'teal.800' }}
         />
       </Link>
     </HStack>

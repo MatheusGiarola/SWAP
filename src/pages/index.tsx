@@ -1,38 +1,29 @@
 import { NextPage } from "next";
 import Head from "next/head";
 
-import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { Header } from "../components/Header";
-import { SideBar } from "../components/SideBar";
-import { withSSRAuth } from "../utils/withSSRAuth";
+import { Flex, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-const Dashboard: NextPage = () => {
+const Home: NextPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/signIn')
+  }, [])
+
   return (
     <>
       <Head>
-        <title>Dashboard</title>
+        <title>Bem-vindo ao SWAP</title>
       </Head>
 
       <Flex direction="column" h="100vh">
-        <Header />
-
-        <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
-          <SideBar />
-
-          <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-           
-          </SimpleGrid>
-        </Flex>
+        <Heading>Home page</Heading>
       </Flex>
     </>
   )
 }
 
 
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-  return {
-    props: {}
-  }
-})
-
-export default Dashboard
+export default Home

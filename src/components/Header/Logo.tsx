@@ -6,10 +6,11 @@ export function Logo(props: TextProps) {
       fontSize={["2xl", "3xl"]}
       fontWeight="bold"
       letterSpacing="tight"
+      color="gray.700"
       {...props}
     >
       SWAP
-      <Text as="span" ml="1" color="pink.500">.</Text>
+      <Text as="span" ml="1" color="teal.500">.</Text>
     </Text>
   )
 }

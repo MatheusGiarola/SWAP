@@ -8,7 +8,7 @@ export function withSSRGuest<P>(fn: GetServerSideProps<P>) {
         if (cookies[process.env.NEXT_PUBLIC_TOKEN_NAME]) {
             return {
                 redirect: {
-                    destination: '/',
+                    destination: '/dashboard',
                     permanent: false,
                 }
             }

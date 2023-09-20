@@ -1,4 +1,4 @@
-import { Flex, Box, Text } from "@chakra-ui/react"
+import { Flex, Box, Text, Skeleton } from "@chakra-ui/react"
 import { useAuth } from "../../hooks/useAuth";
 import { SettingsMenu } from "./SettingsMenu";
 
@@ -8,16 +8,15 @@ interface ProfileProps {
 }
 
 export function Profile({ showProfileData = true }: ProfileProps) {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
 
   return (
     <Flex align="center">
-
       {showProfileData && (
-        <Box mr="4" textAlign="right">
+        <Skeleton isLoaded={!isLoading} mr="4" textAlign="right" color="teal.900">
           <Text >{user?.displayName}</Text>
-          <Text fontSize="small" color="gray.300">{user?.email}</Text>
-        </Box>
+          <Text fontSize="small" color="teal.800">{user?.email}</Text>
+        </Skeleton>
       )}
 
       <SettingsMenu />

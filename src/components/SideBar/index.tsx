@@ -14,10 +14,9 @@ export function SideBar() {
         return (
             <Drawer isOpen={isOpen} placement="left" onClose={onClose} >
                 <DrawerOverlay >
-                    <DrawerContent bg="gray.800" p="4">
+                    <DrawerContent bg="teal.900" p="4">
                         <DrawerCloseButton mt="6" />
-                        <DrawerHeader >Navegação</DrawerHeader>
-
+                        <DrawerHeader color="white">Navegação</DrawerHeader>
                         <DrawerBody>
                             <SideBarNav />
                         </DrawerBody>
