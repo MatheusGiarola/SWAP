@@ -13,7 +13,9 @@ import { Center,
   Heading,
   Image, 
   Text, 
-  Button } from "@chakra-ui/react";
+  Button, 
+  Box} from "@chakra-ui/react";
+//import {Paginator} from 'chakra-paginator';
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
 import { useAuth } from "../hooks/useAuth";
@@ -32,7 +34,8 @@ const Dashboard: NextPage = () => {
     }
   }, [isLoading, user]);//no isLoading do return eu mudei o spinner de lugar para visualizar o código pois o firebase fica carregando
   
-  const DisplayedProjects = Projects.slice(0,5); //quando novos projetos forem sendo adicionados, eles irão para o início ou final do array?
+  const orderedProjects = Projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const DisplayedProjects = orderedProjects.slice(0,5); 
 
   return (
     <>
@@ -49,7 +52,6 @@ const Dashboard: NextPage = () => {
           {isLoading
             ? (
             <SimpleGrid flex="1" gap="4" 
-            minChildWidth="320px" 
             padding='30px'>
               {DisplayedProjects.map((Projects) => (
 
@@ -69,13 +71,16 @@ const Dashboard: NextPage = () => {
                     </CardHeader>
 
                     <CardBody textAlign='justify'
-                    marginLeft='30px'>
+                      marginLeft='30px'
+                      alignSelf='center'>
                       <Image 
-                        align='center'
+                        objectFit='contain'
+                        alignContent='center'
                         alt={Projects.title}
-                        width='850px'
-                        height='250px'
-                        src='https://leitorcompulsivo.com.br/wp-content/uploads/2019/11/o_Instituto_King-696x522.jpg'
+                        width='30rem'
+                        height='30rem'
+                        src='https://www.solidscape.com/wp-content/uploads/2021/10/800x800-300x300.png'
+                        margin="0 auto"
                       />
 
                       <br/>
@@ -107,6 +112,11 @@ const Dashboard: NextPage = () => {
                 <Spinner size='xl' color="teal.500" />
               </Center>
           )}
+
+          <Box as="aside" w="10rem" p='4' mr="8">
+            <Text as='b' 
+            color='GrayText'>Filtros</Text>
+          </Box>
         </Flex>
       </Flex>
     </>
