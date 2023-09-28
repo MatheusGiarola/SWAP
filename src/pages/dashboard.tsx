@@ -15,17 +15,33 @@ import { Center,
   Text, 
   Button, 
   Box} from "@chakra-ui/react";
-//import {Paginator} from 'chakra-paginator';
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Pagination } from "../components/Pagination";
 import { useRouter } from "next/router";
 
 const Dashboard: NextPage = () => {
   const { user, isLoading, isAuthenticated, authState } = useAuth()
   const router = useRouter()
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 5;
+  const orderedProjects = Projects.sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+  const startIndex = (currentPage - 1) * projectsPerPage;
+  const endIndex = startIndex + projectsPerPage;
+  const displayedProjects = orderedProjects.slice(startIndex, endIndex);
+
+
+  const handlePageChange = (page: number) => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+    setCurrentPage(page);};
+  
   useEffect(() => {
     const { success, redirect } = isAuthenticated()
 
@@ -33,9 +49,6 @@ const Dashboard: NextPage = () => {
       if (!success) router.replace(redirect.path)
     }
   }, [isLoading, user]);//no isLoading do return eu mudei o spinner de lugar para visualizar o código pois o firebase fica carregando
-  
-  const orderedProjects = Projects.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  const DisplayedProjects = orderedProjects.slice(0,5); 
 
   return (
     <>
@@ -53,7 +66,7 @@ const Dashboard: NextPage = () => {
             ? (
             <SimpleGrid flex="1" gap="4" 
             padding='30px'>
-              {DisplayedProjects.map((Projects) => (
+              {displayedProjects.map((Projects) => (
 
                   <Card backgroundColor='gray.100'
                   borderColor='black'
@@ -105,8 +118,17 @@ const Dashboard: NextPage = () => {
                     <br/>
 
                   </Card>
-                ))}
+                ))};
+                <Box mt="4" display="flex" justifyContent="center">
+                  <Pagination
+                    totalCountOfRegisters={orderedProjects.length}
+                    currentPage={currentPage}
+                    registersPerPage={projectsPerPage}
+                    onPageChange={handlePageChange}
+                  />
+                </Box>
               </SimpleGrid>
+              
             ): (
               <Center w="100%" h="100%">
                 <Spinner size='xl' color="teal.500" />
