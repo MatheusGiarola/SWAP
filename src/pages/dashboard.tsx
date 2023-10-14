@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import Projects from '../../allPublicProjects-exemple.json';
+import projects from '../../allPublicProjects-exemple.json';
+import { ModalPage } from "../components/modalPage";
 
 import { Center, 
   Flex, 
@@ -14,7 +15,9 @@ import { Center,
   Image, 
   Text, 
   Button, 
-  Box} from "@chakra-ui/react";
+  Box,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
 import { useAuth } from "../hooks/useAuth";
@@ -26,14 +29,14 @@ const Dashboard: NextPage = () => {
   const { user, isLoading, isAuthenticated, authState } = useAuth()
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 5;
-  const orderedProjects = Projects.sort((a, b) =>
+  const projectsPerPage = 1;
+  //const filteredProjects = Projects.filter((p) -> p. );
+  const orderedProjects = projects.sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
   const displayedProjects = orderedProjects.slice(startIndex, endIndex);
-
 
   const handlePageChange = (page: number) => {
     window.scrollTo({
@@ -42,6 +45,8 @@ const Dashboard: NextPage = () => {
     });
     setCurrentPage(page);};
   
+   const { isOpen, onOpen, onClose } = useDisclosure()
+
   useEffect(() => {
     const { success, redirect } = isAuthenticated()
 
@@ -66,21 +71,23 @@ const Dashboard: NextPage = () => {
             ? (
             <SimpleGrid flex="1" gap="4" 
             padding='30px'>
-              {displayedProjects.map((Projects) => (
+              {displayedProjects.map((projects) => (
+              
+                <Flex>
 
                   <Card backgroundColor='gray.100'
                   borderColor='black'
                   border='2px'
                   maxWidth='150vh'
                   borderRadius='3xl'
-                  key={Projects.id}>
+                  key={projects.id}>
 
                     <CardHeader>
                       <Heading fontSize='xxx-large' 
                         color="teal.500"
                         marginStart='30px'
                         textAlign="center"
-                      > {Projects.title}</Heading>
+                      > {projects.title}</Heading>
                     </CardHeader>
 
                     <CardBody textAlign='justify'
@@ -89,10 +96,10 @@ const Dashboard: NextPage = () => {
                       <Image 
                         objectFit='contain'
                         alignContent='center'
-                        alt={Projects.title}
-                        width='30rem'
-                        height='30rem'
-                        src='https://www.solidscape.com/wp-content/uploads/2021/10/800x800-300x300.png'
+                        alt={projects.title}
+                        width='40rem'
+                        height='20rem'
+                        src='http://poiani.com.br/wp-content/uploads/2017/09/800x400-808x400.png'
                         margin="0 auto"
                       />
 
@@ -100,9 +107,9 @@ const Dashboard: NextPage = () => {
 
                       <Text as='b' 
                       marginRight='30px'
-                      noOfLines={[1, 2, 3, 4]}>{Projects.description}</Text>
+                      noOfLines={[1, 2, 3, 4]}>{projects.description}</Text>
 
-                      {Projects.contributors.map((contributors) => (
+                      {projects.contributors.map((contributors) => (
                         <Text fontSize='xl'
                         color='teal.500'
                         textAlign='left'
@@ -112,22 +119,27 @@ const Dashboard: NextPage = () => {
 
                     <CardFooter alignSelf='center'>
                       <Button colorScheme='teal'
-                      size='lg'> Ver projeto</Button>
+                      size='lg'
+                      onClick={onOpen}> Ver projeto</Button>
                     </CardFooter>
 
                     <br/>
 
                   </Card>
-                ))};
-                <Box mt="4" display="flex" justifyContent="center">
-                  <Pagination
-                    totalCountOfRegisters={orderedProjects.length}
-                    currentPage={currentPage}
-                    registersPerPage={projectsPerPage}
-                    onPageChange={handlePageChange}
-                  />
-                </Box>
-              </SimpleGrid>
+                  <ModalPage projects={projects} isOpen={isOpen} onClose={onClose} />
+
+                </Flex>
+              ))}
+
+              <Box mt="4" display="flex" justifyContent="center">
+                <Pagination
+                  totalCountOfRegisters={orderedProjects.length}
+                  currentPage={currentPage}
+                  registersPerPage={projectsPerPage}
+                  onPageChange={handlePageChange}
+                />
+              </Box>
+            </SimpleGrid>
               
             ): (
               <Center w="100%" h="100%">
