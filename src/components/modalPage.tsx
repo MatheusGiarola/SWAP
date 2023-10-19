@@ -52,16 +52,10 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                   <Box>
                     <Heading size='md'color='teal.500'
                     >Data de Finalização</Heading>
-                    <Text>{projects.endDate === null ? "-" :
+                    <Text>{projects.endDate === null ? "Em andamento" :
                       format(new Date(projects.endDate), "dd/MM/yyyy") }</Text>
                   </Box>
                 </HStack>
-
-                <Box>
-                  <Heading size='md'color='teal.500'
-                  >Descrição</Heading>
-                  <Text>{projects.description}</Text>
-                </Box>
 
                 <Box>
                   <Heading size='md'color='teal.500'
@@ -69,6 +63,12 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                   <Text>{projects.description}</Text>
                 </Box>
                 
+                <Box>
+                  <Heading size='md'color='teal.500'
+                  >Descrição</Heading>
+                  <Text>{projects.description}</Text>
+                </Box>
+
                 <Box>
                   <Heading size='md'color='teal.500'
                   >Objetivo Geral</Heading>
@@ -86,7 +86,7 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                 <HStack spacing='3rem'>
                   <Box>
                     <Heading size='md' color='teal.500'
-                    >Curso</Heading>
+                    >Área</Heading>
                     <Text>Ciências Econômicas</Text>
                   </Box>
 
@@ -96,10 +96,18 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                     <Text>Artigo Acadêmico</Text>
                   </Box>
                 </HStack>
+                
+                {projects.typeOfFinancing === null ? "" :
+                  <Box>
+                    <Heading size='md'color='teal.500'
+                    >Tipo de Financiamento</Heading>
+                    <Text>{projects.typeOfFinancing}</Text>
+                  </Box> 
+                }
 
                 <Box>
                   <Heading size='md'color='teal.500'
-                  >Colaboradores</Heading>
+                  >Membros</Heading>
                   {projects.contributors.map((contributors) => (
                   <Text>{contributors.name}</Text>))}
                 </Box>
