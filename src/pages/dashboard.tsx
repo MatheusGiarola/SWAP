@@ -1,7 +1,8 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import projects from '../../allPublicProjects-exemple.json';
+import projects from '../../projects.json';
 import { ModalPage } from "../components/modalPage";
+import axios from "axios";
 
 import { Center, 
   Flex, 
@@ -17,6 +18,9 @@ import { Center,
   Button, 
   Box,
   useDisclosure,
+  Input,
+  Stack,
+  Link,
 } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
@@ -27,16 +31,46 @@ import { useRouter } from "next/router";
 
 const Dashboard: NextPage = () => {
   const { user, isLoading, isAuthenticated, authState } = useAuth()
+
+  const [nome, setNome] = useState('')
+  const [patrocinador, setPatrocinador] = useState('')
+  const [curso, setCurso] = useState('')
+  const [dInicio, setDInicio] = useState('')
+  const [dFinal, setDFinal] = useState('')
+  const [autor, setAutor] = useState('')
+  const [projetos, setProjetos]=useState(projects)
+
+  const numDInicio= isNaN(parseInt(dInicio))? null : parseInt(dInicio);
+  const numDFinal= isNaN(parseInt(dFinal))? null : parseInt(dFinal);
+  
+  const handleSubmit= async (event) =>{
+    event.preventDefault();
+    try {
+      const res = await fetch('/api/projects', {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({nome,patrocinador,curso,numDInicio,numDFinal,autor})
+      })
+      if (res.ok) {
+        const resposta= await res.json();
+        setProjetos(resposta);
+      }
+    } catch (error) {
+      console.log(error)
+      alert("Um erro inesperado aconteceu, tente novamente.")
+    }
+  };
+
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 1;
-  //const filteredProjects = Projects.filter((p) -> p. );
-  const orderedProjects = projects.sort((a, b) =>
+  const orderedProjects = projetos.sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
   const displayedProjects = orderedProjects.slice(startIndex, endIndex);
+
 
   const handlePageChange = (page: number) => {
     window.scrollTo({
@@ -47,14 +81,15 @@ const Dashboard: NextPage = () => {
   
    const { isOpen, onOpen, onClose } = useDisclosure()
 
+
   useEffect(() => {
     const { success, redirect } = isAuthenticated()
 
     if (!isLoading) {
       if (!success) router.replace(redirect.path)
     }
-  }, [isLoading, user]);//no isLoading do return eu mudei o spinner de lugar para visualizar o código pois o firebase fica carregando
-
+  }, [isLoading, user]);
+  
   return (
     <>
       <Head>
@@ -130,7 +165,9 @@ const Dashboard: NextPage = () => {
 
                 </Flex>
               ))}
-
+              {projetos.length===0?(
+                <Text>Não há resultados correspondentes à sua pesquisa</Text>
+              ):''}
               <Box mt="4" display="flex" justifyContent="center">
                 <Pagination
                   totalCountOfRegisters={orderedProjects.length}
@@ -148,8 +185,65 @@ const Dashboard: NextPage = () => {
           )}
 
           <Box as="aside" w="10rem" p='4' mr="8">
-            <Text as='b' 
-            color='GrayText'>Filtros</Text>
+            <Heading size="md" 
+            color='GrayText'>Filtros</Heading>
+
+              <br/>
+
+            <Stack spacing={4}>
+              <Box>
+                <Text as="b">Título</Text>
+                <Input focusBorderColor='teal.500'
+                value={nome}
+                onChange={(event) => setNome(event.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <Text as="b">Fomentador</Text>
+                <Input focusBorderColor='teal.500'
+                value={patrocinador}
+                onChange={(event) => setPatrocinador(event.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <Text as="b">Área</Text>
+                <Input focusBorderColor='teal.500'
+                value={curso}
+                onChange={(event) => setCurso(event.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <Text as="b">Ano de Início</Text>
+                <Input focusBorderColor='teal.500'
+                value={dInicio}
+                onChange={(event) => setDInicio(event.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <Text as="b">Ano de Finalização</Text>
+                <Input focusBorderColor='teal.500'
+                value={dFinal}
+                onChange={(event) => setDFinal(event.target.value)}
+                />
+              </Box>
+
+              <Box>
+                <Text as="b">Autor</Text>
+                <Input focusBorderColor='teal.500'
+                value={autor}
+                onChange={(event) => setAutor(event.target.value)}
+                />
+              </Box>
+              <hr/>
+                <Button onClick={handleSubmit}
+                colorScheme="teal">
+                  Aplicar
+                </Button>
+            </Stack>
           </Box>
         </Flex>
       </Flex>

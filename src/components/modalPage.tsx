@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { parseISO,format } from "date-fns";
 
 import {Flex,
   Heading,
@@ -46,14 +46,14 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                   <Box>
                     <Heading size='md' color='teal.500'
                     >Data de Início</Heading>
-                    <Text>{format(new Date(projects.createdAt), "dd/MM/yyyy")}</Text>
+                    <Text>{format(parseISO(projects.createdAt), "dd/MM/yyyy")}</Text>
                   </Box>
 
                   <Box>
                     <Heading size='md'color='teal.500'
                     >Data de Finalização</Heading>
                     <Text>{projects.endDate === null ? "Em andamento" :
-                      format(new Date(projects.endDate), "dd/MM/yyyy") }</Text>
+                      format(parseISO(projects.endDate), "dd/MM/yyyy") }</Text>
                   </Box>
                 </HStack>
 
