@@ -16,8 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         const { nome,patrocinador,curso,numDInicio,numDFinal,autor } = req.body
 
         try {
-            const arq = fs.readFileSync(process.cwd() + "/projects.json", "utf-8")   
-            const t= 'teste'         
+            const arq = fs.readFileSync(process.cwd() + "/projects.json", "utf-8")            
             const filteredProjects = JSON.parse(arq).filter((p) => {return(
                 (parseInt(p.createdAt)=== numDInicio || numDInicio===null) &&
                 (parseInt(p.endDate) === numDFinal || numDFinal===null) &&
