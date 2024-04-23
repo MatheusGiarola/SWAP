@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import projects from '../../projects.json';
 import { ModalPage } from "../components/modalPage";
 import axios from "axios";
 
@@ -20,7 +19,9 @@ import { Center,
   useDisclosure,
   Input,
   Stack,
-  Link,
+  FormControl, 
+  FormLabel,
+  Select
 } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
@@ -32,44 +33,107 @@ import { useRouter } from "next/router";
 const Dashboard: NextPage = () => {
   const { user, isLoading, isAuthenticated, authState } = useAuth()
 
-  const [nome, setNome] = useState('')
-  const [patrocinador, setPatrocinador] = useState('')
-  const [curso, setCurso] = useState('')
-  const [dInicio, setDInicio] = useState('')
-  const [dFinal, setDFinal] = useState('')
-  const [autor, setAutor] = useState('')
-  const [projetos, setProjetos]=useState(projects)
+  const [projetos, setProjetos]=useState([])
+  const [courses, setCourses]=useState([])
+  const [totalPages, setTotalPages]=useState(1)
+  const [openModals, setOpenModals] = useState({});
 
-  const numDInicio= isNaN(parseInt(dInicio))? null : parseInt(dInicio);
-  const numDFinal= isNaN(parseInt(dFinal))? null : parseInt(dFinal);
+  /*useEffect(() => {
+    const { success, redirect } = isAuthenticated()
+
+    if (!isLoading) {
+      if (!success) router.replace(redirect.path)
+    }
+  }, [isLoading, user]);*/
+
+  useEffect(()=>{
+    const fetchData = async () =>{
+      try {
+        let params = {
+          "take": projectsPerPage,
+          "page": currentPage,
+        };
+        
+        let query = Object.keys(params)
+          .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+          .join('&');
+        
+        let url = 'http://localhost:3333/project/public?' + query;
+  
+        const res = await fetch(url, {
+        method: "GET",
+        headers: {"Content-Type": "application/json"},
+        })
+        if (res.ok) {
+          const resposta= await res.json();
+          setProjetos(resposta.projects); 
+          setTotalPages(resposta.total)
+        }
+      } catch (error) {
+        console.log(error)
+        window.location.reload();
+      };
+    };
+    fetchData();
+
+    const courseFilter= async () =>{
+      try{
+        const res= await fetch("http://localhost:3333/course", {
+          method: "GET",
+          headers: {"Content-Type": "application/json"},
+        })
+        if (res.ok) {
+          const courses= await res.json();
+          setCourses(courses)
+        }
+      } catch (error) {
+        console.log(error)
+      };
+    };
+    courseFilter();
+  }, [])
   
   const handleSubmit= async (event) =>{
-    event.preventDefault();
+    event.preventDefault(); 
     try {
-      const res = await fetch('/api/projects', {
-      method: "POST",
+      let params = {
+        "take": projectsPerPage,
+        "page": currentPage,
+        "search": event.target.elements['titulo'].value,
+        "sponsorship": event.target.elements['fomentador'].value,
+        "startYear": event.target.elements['anoInicio'].value,
+        "endYear": event.target.elements['anoFinalizacao'].value,
+        "courseId": event.target.elements['curso'].value
+      };
+      
+      let query = Object.keys(params)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+        .join('&');
+      
+      let url = 'http://localhost:3333/project/public?' + query;
+
+      const res = await fetch(url, {
+      method: "GET",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({nome,patrocinador,curso,numDInicio,numDFinal,autor})
       })
       if (res.ok) {
         const resposta= await res.json();
-        setProjetos(resposta);
+        setProjetos(resposta.projects); 
+        setTotalPages(resposta.total)
       }
     } catch (error) {
-      console.log(error)
-      alert("Um erro inesperado aconteceu, tente novamente.")
-    }
+      setProjetos([])
+    };
   };
 
-  const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 1;
   const orderedProjects = projetos.sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-  const startIndex = (currentPage - 1) * projectsPerPage;
+  /*const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
-  const displayedProjects = orderedProjects.slice(startIndex, endIndex);
+  const displayedProjects = orderedProjects.slice(startIndex, endIndex);*/
 
 
   const handlePageChange = (page: number) => {
@@ -77,20 +141,10 @@ const Dashboard: NextPage = () => {
       top: 0,
       behavior: "smooth"
     });
-    setCurrentPage(page);};
-  
-   const { isOpen, onOpen, onClose } = useDisclosure()
-
-
-  useEffect(() => {
-    const { success, redirect } = isAuthenticated()
-
-    if (!isLoading) {
-      if (!success) router.replace(redirect.path)
-    }
-  }, [isLoading, user]);
-  
-  return (
+    setCurrentPage(page);
+  };
+console.log(orderedProjects)
+    return (
     <>
       <Head>
         <title>Dashboard</title>
@@ -102,11 +156,11 @@ const Dashboard: NextPage = () => {
         <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
           <SideBar />
 
-          {isLoading
+          {!isLoading && projetos.length > 0
             ? (
             <SimpleGrid flex="1" gap="4" 
             padding='30px'>
-              {displayedProjects.map((projects) => (
+              {orderedProjects.map((projects) => (
               
                 <Flex>
 
@@ -128,15 +182,16 @@ const Dashboard: NextPage = () => {
                     <CardBody textAlign='justify'
                       marginLeft='30px'
                       alignSelf='center'>
+                      {projects.coverUrl !== null?(
                       <Image 
                         objectFit='contain'
                         alignContent='center'
                         alt={projects.title}
                         width='40rem'
                         height='20rem'
-                        src='http://poiani.com.br/wp-content/uploads/2017/09/800x400-808x400.png'
+                        src={projects.coverUrl}
                         margin="0 auto"
-                      />
+                      />):''}
 
                       <br/>
 
@@ -155,22 +210,24 @@ const Dashboard: NextPage = () => {
                     <CardFooter alignSelf='center'>
                       <Button colorScheme='teal'
                       size='lg'
-                      onClick={onOpen}> Ver projeto</Button>
+                      onClick={() => setOpenModals(prevState => ({ ...prevState, [projects.id]: true }))}>
+                        Ver projeto
+                      </Button>
                     </CardFooter>
 
                     <br/>
-
                   </Card>
-                  <ModalPage projects={projects} isOpen={isOpen} onClose={onClose} />
-
+                  <ModalPage projects={projects} isOpen={openModals[projects.id]} onClose={() => setOpenModals(prevState => ({ ...prevState, [projects.id]: false }))} />
+                  
                 </Flex>
               ))}
+              
               {projetos.length===0?(
-                <Text>Não há resultados correspondentes à sua pesquisa</Text>
+                <Text>Não há resultados correspondentes à sua pesquisa.</Text>
               ):''}
               <Box mt="4" display="flex" justifyContent="center">
                 <Pagination
-                  totalCountOfRegisters={orderedProjects.length}
+                  totalCountOfRegisters= {Math.floor(totalPages/projectsPerPage)}
                   currentPage={currentPage}
                   registersPerPage={projectsPerPage}
                   onPageChange={handlePageChange}
@@ -191,58 +248,56 @@ const Dashboard: NextPage = () => {
               <br/>
 
             <Stack spacing={4}>
-              <Box>
-                <Text as="b">Título</Text>
-                <Input focusBorderColor='teal.500'
-                value={nome}
-                onChange={(event) => setNome(event.target.value)}
-                />
-              </Box>
+                <form onSubmit={handleSubmit}>
+                  <Box>
+                    <FormControl id="titulo">
+                      <FormLabel>Título</FormLabel>
+                      <Input type="text"/>
+                    </FormControl>
 
-              <Box>
-                <Text as="b">Fomentador</Text>
-                <Input focusBorderColor='teal.500'
-                value={patrocinador}
-                onChange={(event) => setPatrocinador(event.target.value)}
-                />
-              </Box>
+                    <FormControl id="fomentador">
+                      <FormLabel>Fomentador</FormLabel>
+                      <Input type="text"/>
+                    </FormControl>
 
-              <Box>
-                <Text as="b">Área</Text>
-                <Input focusBorderColor='teal.500'
-                value={curso}
-                onChange={(event) => setCurso(event.target.value)}
-                />
-              </Box>
+                    <FormControl id="area">
+                      <FormLabel>Área</FormLabel>
+                      <Input type="text"/>
+                    </FormControl>
 
-              <Box>
-                <Text as="b">Ano de Início</Text>
-                <Input focusBorderColor='teal.500'
-                value={dInicio}
-                onChange={(event) => setDInicio(event.target.value)}
-                />
-              </Box>
+                    <FormControl id="anoInicio">
+                      <FormLabel>Ano de Início</FormLabel>
+                      <Input type="number"/>
+                    </FormControl>
 
-              <Box>
-                <Text as="b">Ano de Finalização</Text>
-                <Input focusBorderColor='teal.500'
-                value={dFinal}
-                onChange={(event) => setDFinal(event.target.value)}
-                />
-              </Box>
+                    <FormControl id="anoFinalizacao">
+                      <FormLabel>Ano de Finalização</FormLabel>
+                      <Input type="number"/>
+                    </FormControl>
 
-              <Box>
-                <Text as="b">Autor</Text>
-                <Input focusBorderColor='teal.500'
-                value={autor}
-                onChange={(event) => setAutor(event.target.value)}
-                />
-              </Box>
-              <hr/>
-                <Button onClick={handleSubmit}
-                colorScheme="teal">
-                  Aplicar
-                </Button>
+                    <FormControl id="autor">
+                      <FormLabel>Autor</FormLabel>
+                      <Input type="text"/>
+                    </FormControl>
+
+                    <FormControl id="curso">
+                      <FormLabel>Área</FormLabel>
+                      <Select placeholder=" ">
+                      {courses.map((course)=>{return(
+                        <option value={course.id}>{course.name}</option>
+                      )})}
+                      </Select>
+                    </FormControl>
+                    <br/>
+                    <hr />
+                    <br />
+
+                    <Button type="submit"
+                    colorScheme="teal">
+                      Aplicar
+                    </Button>
+                  </Box>
+                </form>
             </Stack>
           </Box>
         </Flex>

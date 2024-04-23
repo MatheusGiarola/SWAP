@@ -32,15 +32,16 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
 
             <ModalBody>
               <Flex direction='column' gap='1.5rem'>
-                <Image 
-                  objectFit='contain'
-                  alignContent='center'
-                  alt={projects.title}
-                  width='40rem'
-                  height='20rem'
-                  src='http://poiani.com.br/wp-content/uploads/2017/09/800x400-808x400.png'
-                  margin="0 auto"
-                  />
+              {projects.coverUrl !== null?(
+                      <Image 
+                        objectFit='contain'
+                        alignContent='center'
+                        alt={projects.title}
+                        width='40rem'
+                        height='20rem'
+                        src={projects.coverUrl}
+                        margin="0 auto"
+                      />):''}
 
                 <HStack spacing='3rem'>
                   <Box>
@@ -59,51 +60,18 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
 
                 <Box>
                   <Heading size='md'color='teal.500'
-                  >Resumo</Heading>
-                  <Text>{projects.description}</Text>
-                </Box>
-                
-                <Box>
-                  <Heading size='md'color='teal.500'
                   >Descrição</Heading>
                   <Text>{projects.description}</Text>
                 </Box>
 
-                <Box>
-                  <Heading size='md'color='teal.500'
-                  >Objetivo Geral</Heading>
-                  <Text>{projects.description}</Text>
-                </Box>
-
-                <Box>
-                  <Heading size='md'color='teal.500'
-                  >Objetivos Específicos</Heading>
-                  <Text>Objetivo 1</Text>
-                  <Text>Objetivo 2</Text>
-                  <Text>Objetivo 3</Text>
-                </Box>
-
                 <HStack spacing='3rem'>
-                  <Box>
-                    <Heading size='md' color='teal.500'
-                    >Área</Heading>
-                    <Text>Ciências Econômicas</Text>
-                  </Box>
 
                   <Box>
                     <Heading size='md'color='teal.500'
                     >Tipo</Heading>
-                    <Text>Artigo Acadêmico</Text>
+                    <Text>{projects.type.name}</Text>
                   </Box>
                 </HStack>
-                
-                {projects.typeOfFinancing === null ? "" :
-                  <Box>
-                    <Heading size='md'color='teal.500'
-                    >Tipo de Financiamento</Heading>
-                    <Text>{projects.typeOfFinancing}</Text>
-                  </Box> 
-                }
 
                 <Box>
                   <Heading size='md'color='teal.500'
