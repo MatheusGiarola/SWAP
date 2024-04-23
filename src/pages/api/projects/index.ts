@@ -17,7 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
         try {
             const arq = fs.readFileSync(process.cwd() + "/projects.json", "utf-8")            
-            const filteredProjects = JSON.parse(arq).filter((p) => {return(
+            const filteredProjects = JSON.parse(arq).filter((p) => {
+                return(
                 (parseInt(p.createdAt)=== numDInicio || numDInicio===null) &&
                 (parseInt(p.endDate) === numDFinal || numDFinal===null) &&
                 (p.title.toLowerCase().includes(nome.toLowerCase()) || nome==='') &&
