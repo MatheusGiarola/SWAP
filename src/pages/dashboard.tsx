@@ -59,10 +59,14 @@ async function getPublicProjects(params) {
 const Dashboard: NextPage = () => {
   const { user, isLoading, isAuthenticated, authState } = useAuth()
 
+  const [openModals, setOpenModals] = useState({});
   const [projetos, setProjetos] = useState([])
   const [courses, setCourses] = useState([])
   const [totalPages, setTotalPages] = useState(1)
-  const [openModals, setOpenModals] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 5;
+  const orderedProjects = projetos.sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   let projectFilters = {};
 
@@ -102,10 +106,7 @@ const Dashboard: NextPage = () => {
     courseFilter();
   }, [])
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const projectsPerPage = 5;
-  const orderedProjects = projetos.sort((a, b) =>
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -232,12 +233,9 @@ const Dashboard: NextPage = () => {
                   </Flex>
                 ))}
 
-                {projetos.length === 0 ? (
-                  <Text>Não há resultados correspondentes à sua pesquisa.</Text>
-                ) : ''}
                 <Box mt="4" display="flex" justifyContent="center">
                   <Pagination
-                    totalCountOfRegisters={Math.floor(totalPages / projectsPerPage)}
+                    totalCountOfRegisters={totalPages}
                     currentPage={currentPage}
                     registersPerPage={projectsPerPage}
                     onPageChange={handlePageChange}
@@ -247,7 +245,7 @@ const Dashboard: NextPage = () => {
 
             ) : (
               <Center w="100%" h="100%">
-                <Spinner size='xl' color="teal.500" />
+                 <Text>Não há resultados correspondentes à sua pesquisa.</Text>
               </Center>
             )}
 
@@ -267,11 +265,6 @@ const Dashboard: NextPage = () => {
 
                   <FormControl id="fomentador">
                     <FormLabel>Fomentador</FormLabel>
-                    <Input type="text" />
-                  </FormControl>
-
-                  <FormControl id="area">
-                    <FormLabel>Área</FormLabel>
                     <Input type="text" />
                   </FormControl>
 
@@ -300,6 +293,7 @@ const Dashboard: NextPage = () => {
                       })}
                     </Select>
                   </FormControl>
+
                   <br />
                   <hr />
                   <br />

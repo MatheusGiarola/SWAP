@@ -47,7 +47,7 @@ export const ModalPage = ({ projects, isOpen, onClose }) => {
                   <Box>
                     <Heading size='md' color='teal.500'
                     >Data de Início</Heading>
-                    <Text>{format(parseISO(projects.createdAt), "dd/MM/yyyy")}</Text>
+                    <Text>{format(parseISO(projects.startDate), "dd/MM/yyyy")}</Text>
                   </Box>
 
                   <Box>
