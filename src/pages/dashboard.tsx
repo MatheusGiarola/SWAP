@@ -82,10 +82,7 @@ const Dashboard: NextPage = () => {
       if (projects && total) {
         setProjetos(projects);
         setTotalPages(total);
-      } else {
-        window.location.reload();
       }
-
     };
     fetchData();
 
